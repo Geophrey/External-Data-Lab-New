@@ -7,8 +7,6 @@ import {
 
 // import axios from "axios";
 
-//test thing
-
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
 // The information section div element.
@@ -42,6 +40,15 @@ const requestOptions = {
     redirect: "follow",
 };
 
+let axiosDefaults = axios.create({
+  baseURL: 'https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=5'
+});
+
+axiosDefaults.defaults.headers.common["x-api-key"] = API_KEY
+axiosDefaults.defaults.headers.common["Content-Type"] = "application/json"
+// axiosDefaults.defaults.timeout = 3000;
+console.log(axiosDefaults.defaults.headers)
+
 // .then(response => response.text())
 // .then(result => console.log(result))
 // .catch(error => console.log('error', error));
@@ -55,13 +62,18 @@ async function initialLoad() {
         //     requestOptions
         // );
 
-        const response = await axios("https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=5")
+        // const response = await axios.get("https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=5")
+
+        const response = await axiosDefaults.get()
+        console.log(`This is the un-json-ified response:`)
         console.log(response)
-        if (!response.ok) {
-            throw `Response status: ${response.status}`;
-        }
-        const result = await response.json();
-        console.log(result);
+        // console.log(response.ok)
+        // if (!response.ok) {
+        //     throw `Response status: ${response.status}`;
+        // }
+        const result = await response.data;
+        console.log(`This is the json-ified result:`);
+        console.log(result)
 
         result.forEach((element) => {
             const option = breedSelect.appendChild(
