@@ -55,7 +55,7 @@ console.log(axiosDefaults.defaults.headers)
 
 initialLoad();
 
-async function initialLoad() {
+axiosDefaults.interceptors.response.use(async function initialLoad() {
     try {
         // const response = await fetch(
         //     "https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=5",
@@ -76,20 +76,30 @@ async function initialLoad() {
         console.log(result)
 
         result.forEach((element) => {
+            //creates carousel elements
             const option = breedSelect.appendChild(
                 document.createElement("option")
             );
             option.value = element.breeds[0].id;
             option.textContent = element.breeds[0].name;
+            
+            // const info = infoDump.appendChild(
+            //     document.createElement("p")
+            // );
+            // info.value = element.breeds[0].id;
+            // info.textContent = element.breeds[0].name;
+
         });
 
         carouselChange(breedSelect.value);
 
         console.log(breedSelect);
+        // console.log(infoDump);
     } catch (error) {
         console.log(error);
     }
 }
+)
 /**
  * 2. Create an event handler for breedSelect that does the following:
  * - Retrieve information on the selected breed from the cat API using fetch().
@@ -113,16 +123,24 @@ breedSelect.addEventListener("change", (e) => {
 
 async function carouselChange(id) {
     try {
-        const response = await fetch(
-            `https://api.thecatapi.com/v1/images/search?breed_ids=${id}&limit=10`,
-            requestOptions
-        );
+        // const response = await fetch(
+        //     `https://api.thecatapi.com/v1/images/search?breed_ids=${id}&limit=10`,
+        //     requestOptions
+        // );
 
-        if (!response.ok) {
-            throw `Response status: ${response.status}`;
-        }
-        const result = await response.json();
-        console.log(result);
+        const response = await axiosDefaults.get()
+        console.log(response)
+
+        // if (!response.ok) {
+        //     throw `Response status: ${response.status}`;
+        // }
+
+        const result = await response.data;
+        console.log(result)
+
+        // const result = await response.json();
+        // console.log(result);
+
         clear();
         result.forEach((element) => {
             appendCarousel(
